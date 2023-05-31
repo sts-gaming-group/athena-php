@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+use Athena\ComposerExecutor;
+use Athena\CveIgnore;
+use Athena\Filemanager;
+use Athena\Runner;
+use Athena\Writer;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\SingleCommandApplication;
+
+include_once __DIR__ . '/../autoload.php';
+
+
+(new SingleCommandApplication())
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+        $runner = new Runner(
+            new Writer($input, $output),
+            new ComposerExecutor(),
+            new CveIgnore(new Filemanager())
+        );
+        $runner->runAthena();
+    })
+    ->run();
