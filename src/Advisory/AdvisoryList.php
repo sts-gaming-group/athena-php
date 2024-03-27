@@ -6,7 +6,6 @@ namespace Athena\Advisory;
 
 class AdvisoryList
 {
-
     /**
      * @param Advisory[] $advisories
      */

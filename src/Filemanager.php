@@ -11,7 +11,8 @@ class Filemanager
         return file_exists($file);
     }
 
-    public function read(string $file): string {
+    public function read(string $file): string
+    {
         return file_get_contents($file);
     }
 }

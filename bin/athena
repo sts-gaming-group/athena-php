@@ -9,17 +9,31 @@ use Athena\Writer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
+use Athena\Utils\Shell\ShellExecutor;
+use Athena\VulnerabilityMetrics\VulnerabilityMetricsApi;
+use Athena\Utils\Http\HttpClient;
 
-include_once __DIR__ . '/../autoload.php';
+$autoloadFiles = [
+    __DIR__.'/../vendor/autoload.php',
+    __DIR__.'/../../../autoload.php',
+];
+
+foreach ($autoloadFiles as $autoloadFile) {
+    if (file_exists($autoloadFile)) {
+        require_once $autoloadFile;
+        break;
+    }
+}
 
 
 (new SingleCommandApplication())
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $runner = new Runner(
             new Writer($input, $output),
-            new ComposerExecutor(),
+            new ComposerExecutor(new ShellExecutor(), new VulnerabilityMetricsApi(new HttpClient())),
             new CveIgnore(new Filemanager())
         );
-        $runner->runAthena();
+
+        return $runner->runAthena();
     })
     ->run();
