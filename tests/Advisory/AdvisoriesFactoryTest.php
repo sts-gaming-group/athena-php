@@ -3,21 +3,27 @@ declare(strict_types=1);
 
 namespace Athena\Tests\Advisory;
 
-use Athena\Advisory\AdvisoriesDeserializer;
+use Athena\Advisory\AdvisoriesFactory;
 use Athena\Advisory\Advisory;
 use Athena\Advisory\AdvisoryList;
 use Athena\Advisory\Source;
+use Athena\VulnerabilityMetrics\VulnerabilityMetrics;
+use Athena\VulnerabilityMetrics\VulnerabilityMetricsApi;
+use Athena\VulnerabilityMetrics\VulnerabilityMetricsApiInterface;
 use PHPUnit\Framework\TestCase;
 
-class AdvisoriesDeserializerTest extends TestCase
+class AdvisoriesFactoryTest extends TestCase
 {
     /**
      * @dataProvider advisoriesDataProvider
      */
-    public function testDeserialize(string $json, int $expectedCount)
+    public function testCreate(string $json, int $expectedCount)
     {
-        $deserializer = new AdvisoriesDeserializer();
-        $advisoryList = $deserializer->deserialize($json);
+        $vulnerabilityMetricsApi = $this->createMock(VulnerabilityMetricsApiInterface::class);
+        $vulnerabilityMetricsApi->method('get')->willReturn(new VulnerabilityMetrics(7.5, 'HIGH'));
+
+        $factory = new AdvisoriesFactory($vulnerabilityMetricsApi);
+        $advisoryList = $factory->create($json);
 
         $this->assertInstanceOf(AdvisoryList::class, $advisoryList);
         $this->assertCount($expectedCount, $advisoryList->advisories);
@@ -38,6 +44,9 @@ class AdvisoriesDeserializerTest extends TestCase
             $this->assertInstanceOf(Source::class, $firstAdvisory->sources[0]);
             $this->assertEquals('FakeSource1', $firstAdvisory->sources[0]->name);
             $this->assertEquals('FAKE-wxmh-65f7-jcvw', $firstAdvisory->sources[0]->remoteId);
+
+            $this->assertEquals(7.5, $firstAdvisory->metrics->baseScore);
+            $this->assertEquals('HIGH', $firstAdvisory->metrics->baseSeverity);
         }
     }
 

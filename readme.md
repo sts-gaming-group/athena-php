@@ -7,7 +7,7 @@ Athena-PHP is a security library that provides an additional layer of functional
 Use composer to install Athena-PHP.
 
 ```bash
-composer require yourusername/athena-php
+composer require sts-gaming-group/athena
 ```
 
 ## Usage

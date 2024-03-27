@@ -41,7 +41,7 @@ class CveIgnore
             throw new CveignoreFileDontExistException();
         }
 
-        $fileContent = $this->filemanager->read(getcwd().'/.cveignore');
+        $fileContent = $this->filemanager->read(getcwd() . '/.cveignore');
         if (empty($fileContent)) {
             return new IgnoredAdvisoryList([]);
         }
