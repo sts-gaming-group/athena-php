@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Athena\ComposerExecutor;
+use Athena\Auditor;
 use Athena\CveIgnore;
 use Athena\Filemanager;
 use Athena\Runner;
@@ -9,7 +9,6 @@ use Athena\Writer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
-use Athena\Utils\Shell\ShellExecutor;
 use Athena\VulnerabilityMetrics\VulnerabilityMetricsApi;
 use Athena\Utils\Http\HttpClient;
 
@@ -30,7 +29,7 @@ foreach ($autoloadFiles as $autoloadFile) {
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $runner = new Runner(
             new Writer($input, $output),
-            new ComposerExecutor(new ShellExecutor(), new VulnerabilityMetricsApi(new HttpClient())),
+            new Auditor(new VulnerabilityMetricsApi(new HttpClient())),
             new CveIgnore(new Filemanager())
         );
 
