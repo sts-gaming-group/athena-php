@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Athena\Tests;
 
 use Athena\Advisory\AdvisoryList;
-use Athena\ComposerExecutor;
+use Athena\Auditor;
 use Athena\CveIgnore;
 use Athena\Runner;
 use Athena\Tests\ObjectMother\AdvisoryMother;
@@ -14,24 +14,21 @@ use PHPUnit\Framework\TestCase;
 
 class RunnerTest extends TestCase
 {
-    private readonly ComposerExecutor $composerExecutor;
+    private readonly Auditor $auditor;
     private readonly CveIgnore $cveIgnore;
     private readonly Runner $runner;
 
     protected function setUp(): void
     {
         $writer = $this->createMock(Writer::class);
-        $this->composerExecutor = $this->createMock(ComposerExecutor::class);
+        $this->auditor = $this->createMock(Auditor::class);
         $this->cveIgnore = $this->createMock(CveIgnore::class);
-        $this->runner = new Runner($writer, $this->composerExecutor, $this->cveIgnore);
+        $this->runner = new Runner($writer, $this->auditor, $this->cveIgnore);
     }
 
     public function testRunNoAdvisories(): void
     {
-        $this->composerExecutor
-            ->expects($this->once())
-            ->method('validateVersion');
-        $this->composerExecutor
+        $this->auditor
             ->expects($this->once())
             ->method('processAudit')
             ->willReturn(
@@ -45,10 +42,7 @@ class RunnerTest extends TestCase
 
     public function testRunWithNotIgnoredAdvisories(): void
     {
-        $this->composerExecutor
-            ->expects($this->once())
-            ->method('validateVersion');
-        $this->composerExecutor
+        $this->auditor
             ->expects($this->once())
             ->method('processAudit')
             ->willReturn(
@@ -72,10 +66,7 @@ class RunnerTest extends TestCase
 
     public function testRunWithIgnoredAndNotIgnoredAdvisories(): void
     {
-        $this->composerExecutor
-            ->expects($this->once())
-            ->method('validateVersion');
-        $this->composerExecutor
+        $this->auditor
             ->expects($this->once())
             ->method('processAudit')
             ->willReturn(
@@ -100,10 +91,7 @@ class RunnerTest extends TestCase
 
     public function testRunWithIgnoredAdvisories(): void
     {
-        $this->composerExecutor
-            ->expects($this->once())
-            ->method('validateVersion');
-        $this->composerExecutor
+        $this->auditor
             ->expects($this->once())
             ->method('processAudit')
             ->willReturn(
@@ -128,10 +116,7 @@ class RunnerTest extends TestCase
 
     public function testRunWithExpiryIgnoredAdvisories(): void
     {
-        $this->composerExecutor
-            ->expects($this->once())
-            ->method('validateVersion');
-        $this->composerExecutor
+        $this->auditor
             ->expects($this->once())
             ->method('processAudit')
             ->willReturn(

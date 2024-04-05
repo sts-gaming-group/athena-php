@@ -1,0 +1,7 @@
+version: "3.6"
+services:
+  php-fpm:
+    build: docker/
+    working_dir: /application/src
+    volumes:
+      - .:/application

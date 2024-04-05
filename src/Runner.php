@@ -10,15 +10,14 @@ class Runner
 {
     public function __construct(
         private readonly Writer $writer,
-        private readonly ComposerExecutor $composerExecutor,
+        private readonly Auditor $auditor,
         private readonly CveIgnore $cveIgnore
     ) {
     }
 
     public function runAthena(): int
     {
-        $this->composerExecutor->validateVersion();
-        $advisoryList = $this->composerExecutor->processAudit();
+        $advisoryList = $this->auditor->processAudit();
         if (false === $advisoryList->hasAdvisories()) {
             $this->writer->writeSuccess('No security vulnerability advisories found');
 
