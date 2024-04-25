@@ -1,6 +1,6 @@
 {
   "name": "sts-gaming-group/athena",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Security library that provides an additional layer of functionality over the composer audit, specifically tailored for managing ignored advisories.",
   "type": "library",
   "keywords": ["audit", "security"],
